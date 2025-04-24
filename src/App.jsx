@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const arr = [
   "😀",
   "🎉",
@@ -27,7 +29,7 @@ export default function App() {
 
 function MainContainer() {
   return (
-    <div className="flex aspect-square w-2xl flex-col gap-2 bg-amber-950 p-2">
+    <div className="flex aspect-square w-2xl flex-col gap-2 bg-teal-950 p-2">
       <Header message={"hello 👋"} />
       <PlayArea />
     </div>
@@ -43,15 +45,37 @@ function Header({ message }) {
 }
 
 function PlayArea() {
+  const [active1, setActive1] = useState("");
+  const [active2, setActive2] = useState("");
+  const [activeCount, setActiveCount] = useState(0);
+
+  function handleClick(emoji) {
+    setActiveCount((c) => c + 1);
+    if (!active1) return setActive1(emoji);
+    if (active1) return setActive2(emoji);
+    setActiveCount(0);
+    setActive1("");
+    setActive2("");
+  }
+
   return (
     <section className="grid flex-1 grid-cols-4 bg-white/20">
-      {arr.map((emoji) => (
-        <EmojiTile emoji={emoji} />
+      {arr.map((emoji, i) => (
+        <EmojiTile
+          emoji={emoji}
+          onClick={handleClick}
+          activeCount={activeCount}
+          key={i}
+        />
       ))}
     </section>
   );
 }
 
-function EmojiTile({ emoji }) {
-  return <article className="border-2 flex justify-center items-center">{emoji}</article>;
+function EmojiTile({ emoji, onClick, activeCount }) {
+  return (
+    <article className="flex cursor-pointer items-center justify-center border text-4xl">
+      {emoji}
+    </article>
+  );
 }
